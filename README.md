@@ -1,47 +1,46 @@
-# Motor-Lag Hover Dashboard
+# Nested PID Hover-Transition Dashboard
 
-An interactive MATLAB prototype for studying vertical drone motion, throttle response, motor spool-up lag, and hover control. This is the recommended starting point among the supplied versions because it combines interactive controls, live telemetry, and a fallback visualization when URDF import fails.
+This branch preserves the earlier `v1` implementation. Its main function is an interactive nested altitude/vertical-velocity PID dashboard with manual throttle and a transition into hover mode. It overlaps substantially with the `version/throttle-hover` branch, so it is retained as a comparison point rather than treated as a distinct control architecture.
 
 ## Functionality
 
-- Provides a throttle slider for manual input.
-- Includes a hover-mode toggle that captures the current altitude as the target.
-- Uses altitude and vertical-velocity feedback to adjust thrust.
-- Models motor response with a first-order lag so RPM does not change instantaneously.
-- Displays telemetry such as altitude, vertical velocity, thrust, and RPM.
-- Attempts to load `drone.urdf` for visualization and falls back to a simple marker if import fails.
+- Offers a manual throttle input.
+- Uses an altitude loop to derive a vertical-velocity target.
+- Uses a vertical-velocity loop to adjust thrust.
+- Includes hover-transition logic to hold the altitude captured when hover mode is enabled.
+- Provides a dashboard-oriented simulation workflow and visualization/telemetry as implemented in the source.
 
-## Model overview
+## What makes this version useful
 
-The simulation approximates vertical motion using \(\ddot z = (T-mg)/m\), with thrust approximated from motor RPM squared. These are simplified assumptions for learning and are not calibrated to a real motor/propeller system. The model does not simulate full 6-DOF quadrotor dynamics, attitude, horizontal movement, aerodynamic effects, or battery behavior.
+Use it to compare the earlier `v1` implementation with the more clearly named `version/throttle-hover` version. Differences should be judged by inspecting and running the MATLAB source; the branch name alone does not imply better performance or stability.
 
 ## Run
 
 From the repository root in MATLAB:
 
 ```matlab
-run("src/motor_lag_hover_dashboard.m")
+run("src/nested_pid_hover_transition.m")
 ```
 
 ## Requirements
 
 - MATLAB with the UI components used by the script.
-- Robotics System Toolbox is recommended for `importrobot`, `homeConfiguration`, and `show` visualization functions.
-- The original workspace did not include `drone.urdf`. If you have a compatible model, put it in the repository root or update the path used by the script.
+- Robotics System Toolbox may be required for URDF import and visualization functions such as `importrobot`, `homeConfiguration`, or `show`.
+- The uploaded workspace did not include `drone.urdf`. Supply a compatible model if required by the source.
 
 ## Repository contents
 
 ```text
 README.md
 src/
-  motor_lag_hover_dashboard.m
+  nested_pid_hover_transition.m
 ```
 
 The branch intentionally contains MATLAB `.m` source only; MATLAB Live Scripts (`.mlx`) are not included.
 
 ## Limitations and validation status
 
-This is an educational prototype, not a flight-ready controller. The code has not been executed or validated in MATLAB as part of this repository packaging. Check controller stability, units, saturation behavior, and model assumptions before relying on the results. Hover mode captures the altitude at activation; enabling it at ground level targets zero altitude.
+This is a simplified educational simulation, not a flight-ready controller. It does not model full 6-DOF quadrotor dynamics. The code has not been executed or validated in MATLAB as part of this repository packaging. Verify behavior, controller tuning, and mode transitions in MATLAB before relying on the results.
 
 ## License
 
